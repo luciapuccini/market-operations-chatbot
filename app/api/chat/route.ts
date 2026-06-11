@@ -31,13 +31,19 @@ export async function POST(req: Request) {
   const { question = "" } = (await req.json()) as { question?: string };
   const fixture = pickFixture(question);
   const encoder = new TextEncoder();
-  const send = (obj: unknown) => encoder.encode(`data: ${JSON.stringify(obj)}\n\n`);
+  const send = (obj: unknown) =>
+    encoder.encode(`data: ${JSON.stringify(obj)}\n\n`);
 
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
       // Error fixture: emit a single error event and stop.
       if (fixture.kind === "error") {
-        controller.enqueue(send({ type: "error", message: fixture.error ?? "Something went wrong." }));
+        controller.enqueue(
+          send({
+            type: "error",
+            message: fixture.error ?? "Something went wrong.",
+          }),
+        );
         controller.close();
         return;
       }
