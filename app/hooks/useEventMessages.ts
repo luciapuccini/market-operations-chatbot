@@ -1,3 +1,4 @@
+import { useReducer } from "react";
 import { EventStreamMessage } from "../types/types";
 
 type AssistantQuestionMessage = readonly ["question", Record<string, string>];
@@ -13,13 +14,13 @@ type AssistantAction = {
   payload: EventStreamMessage | { message: string };
 };
 
-export const initialState = {
+const initialState = {
   messages: [],
   currentMessage: "",
 };
-export const reducerFn = (state: AssistantState, action: AssistantAction): AssistantState => {
+
+const reducerFn = (state: AssistantState, action: AssistantAction): AssistantState => {
   if (action.type === "answer") {
-    console.log("DONE", action.payload);
     const newAnswer = ["answer", { message: state.currentMessage }] as const;
     return {
       ...state,
@@ -34,7 +35,6 @@ export const reducerFn = (state: AssistantState, action: AssistantAction): Assis
 
     return {
       ...state,
-      //WIP: clean current message?
       messages: [...state.messages, newErrorMessage],
     };
   }
@@ -55,6 +55,11 @@ export const reducerFn = (state: AssistantState, action: AssistantAction): Assis
     };
   }
 
-  //default ?
   return state;
+};
+
+export const useEventMessages = () => {
+  const [state, dispatch] = useReducer(reducerFn, initialState);
+
+  return [state, dispatch] as const;
 };

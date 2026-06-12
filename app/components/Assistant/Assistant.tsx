@@ -1,20 +1,24 @@
 "use client";
 
-import { initialState, reducerFn } from "@/app/hooks/useEventMessages";
+import { useEventMessages } from "@/app/hooks/useEventMessages";
 import AbortControllerService from "@/app/services/eventStream";
 import { EventStreamMessage } from "@/app/types/types";
-import { JSX, SubmitEvent, useReducer, useState } from "react";
+import { JSX, SubmitEvent, useRef } from "react";
+import Button from "../ui/Button/Button";
+import { cn } from "../ui/utilities/cn";
 
 const SIMULATED_ENDPOINT = "/api/chat";
 
 export function Assistant(): JSX.Element {
   //TODO: Use useActionState hook for the form submission action
-  const [userInput, setUserInput] = useState("");
+  // const [userInput, setUserInput] = useState("");
+  const userInputRef = useRef(null);
 
-  const [state, dispatch] = useReducer(reducerFn, initialState);
+  const [state, dispatch] = useEventMessages();
 
   async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
+    const userInput = userInputRef.current?.value;
     dispatch({ type: "question", payload: { message: userInput } });
     try {
       const response = await fetch(SIMULATED_ENDPOINT, {
@@ -52,6 +56,8 @@ export function Assistant(): JSX.Element {
           dispatch({ type: "error-answer", payload: finalMessage });
         }
       }
+      // reset form
+      event.target.reset();
     } catch (err) {
       if (err instanceof Error && err.name === "AbortError") {
         console.error("Fetch aborted by user action (browser stop button, closing tab, etc.)");
@@ -60,15 +66,15 @@ export function Assistant(): JSX.Element {
   }
 
   return (
-    <section className="flex flex-col">
-      <section className="max-h-[50vh] w-full overflow-y-auto scroll-smooth border border-amber-500">
-        <ul className="flex flex-col justify-end">
+    <section className="flex w-full flex-col items-center justify-end">
+      <section className="max-h-[50%] w-full overflow-y-auto scroll-smooth">
+        <ul className="flex w-full flex-col justify-end">
           {state.messages.length > 0 &&
             state.messages.map(([msgId, meta], index) => {
-              const questionClass = "text-amber-600";
-              const answerClass = "text-rose-400";
+              const questionClass = "text-amber-600 ml-2";
+              const answerClass = "text-slate-600 ml-2";
               return (
-                <li key={`${msgId}-${index}`} className="m-4">
+                <li key={`${msgId}-${index}`} className={cn(`${msgId === "answer" ? "" : "text-end"}`, "mb-4")}>
                   <span className={` ${msgId === "answer" ? answerClass : questionClass}`}>{meta.message}</span>
                 </li>
               );
@@ -77,34 +83,34 @@ export function Assistant(): JSX.Element {
       </section>
 
       <div className="w-full">
-        <p className="text-blue-400">{state.currentMessage}</p>
-        <form onSubmit={handleSubmit} className="">
-          <label htmlFor="query" className="text-3xl text-slate-700">
+        <p className="">{state.currentMessage}</p>
+
+        <form onSubmit={handleSubmit} className="w-full">
+          <label htmlFor="query" className="sr-only">
             User:
           </label>
-          <input
-            id="query"
-            name="query"
-            type="text"
-            required
-            disabled={false}
-            value={userInput}
-            onChange={(e) => setUserInput(e.target.value)}
-            className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-slate-700 placeholder:text-slate-400 focus:border-transparent focus:ring-2 focus:ring-gray-800 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-          />
-          <button type="submit" className="border border-gray-300 text-3xl text-slate-700">
-            ask question
-          </button>
-          <button
-            type="button"
-            className="border border-gray-300 text-3xl text-slate-700"
-            onClick={() => {
-              console.log("ABORT");
-              AbortControllerService().abort("user cancelled");
-            }}
-          >
-            cancel
-          </button>
+          <div className="flex w-full items-center gap-1.5 rounded-lg border border-slate-200 bg-white p-1.5 shadow-sm transition-all duration-200 focus-within:border-amber-400 focus-within:ring-2 focus-within:ring-amber-400/20">
+            <textarea
+              key="user-input-text-area"
+              ref={userInputRef}
+              id="query"
+              rows={1}
+              placeholder="Ask me anything..."
+              required
+              disabled={false}
+              className="flex-1 resize-none bg-transparent px-1.5 py-0.5 text-slate-900 outline-none placeholder:text-slate-400"
+            />
+            <Button type="submit">ask question</Button>
+            <Button
+              type="button"
+              className="bg-red-400 hover:bg-red-500"
+              onClick={() => {
+                AbortControllerService().abort("user cancelled");
+              }}
+            >
+              cancel
+            </Button>
+          </div>
         </form>
       </div>
     </section>
