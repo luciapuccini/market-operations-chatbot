@@ -8,4 +8,4 @@ export type {
   ProductsId,
   RegionsId,
   ResponseEventStream,
-} from "../controllers/api/shemas";
+} from "../controllers/api/schemas";

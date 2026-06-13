@@ -1,8 +1,8 @@
 import { useReducer } from "react";
 import { EventStreamMessage } from "../types/types";
 
-type AssistantQuestionMessage = readonly ["question", Partial<EventStreamMessage>];
-type AssistantAnswerMessage = readonly ["answer", Partial<EventStreamMessage>];
+export type AssistantQuestionMessage = readonly ["question", Partial<EventStreamMessage>];
+export type AssistantAnswerMessage = readonly ["answer", Partial<EventStreamMessage>];
 
 type AssistantState = {
   currentMessage: string;

@@ -1,7 +1,7 @@
 import { AssistantAction } from "@/app/hooks/useEventMessages";
 import AbortControllerService from "@/services/eventStream";
 import { ActionDispatch } from "react";
-import { responseEventStream } from "./shemas";
+import { responseEventStream } from "./schemas";
 
 const SIMULATED_ENDPOINT = "/api/chat";
 

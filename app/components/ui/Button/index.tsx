@@ -1,7 +1,7 @@
-import { ComponentProps, JSX } from "react";
+import { ComponentProps, JSX, memo } from "react";
 import { cn } from "../utilities/cn";
 
-export default function Button({ children, className, ...props }: ComponentProps<"button">): JSX.Element {
+const Button = ({ children, className, ...props }: ComponentProps<"button">): JSX.Element => {
   const classes = cn("rounded bg-amber-400 px-4 py-2 font-bold text-white hover:bg-amber-500", className);
 
   return (
@@ -9,4 +9,6 @@ export default function Button({ children, className, ...props }: ComponentProps
       {children}
     </button>
   );
-}
+};
+
+export default memo(Button);

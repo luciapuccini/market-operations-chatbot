@@ -1,10 +1,10 @@
-import { JSX, ComponentPropsWithoutRef } from "react";
+import { JSX, ComponentPropsWithoutRef, memo } from "react";
 import AbortControllerService from "@/services/eventStream";
 import Button from "@/app/components/ui/Button";
 
 type ChatInputProps = ComponentPropsWithoutRef<"form">;
 
-export default function ChatInput({ children, onSubmit }: ChatInputProps): JSX.Element {
+const ChatInput = ({ children, onSubmit }: ChatInputProps): JSX.Element => {
   return (
     <form onSubmit={onSubmit} className="w-1/2">
       <label htmlFor="query" className="sr-only">
@@ -34,4 +34,6 @@ export default function ChatInput({ children, onSubmit }: ChatInputProps): JSX.E
       </div>
     </form>
   );
-}
+};
+
+export default memo(ChatInput);
