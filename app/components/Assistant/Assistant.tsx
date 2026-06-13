@@ -1,5 +1,5 @@
 "use client";
-import { SubmitEvent, JSX, useRef } from "react";
+import { SubmitEvent, JSX } from "react";
 import { useEventMessages } from "@/app/hooks/useEventMessages";
 import { cn } from "../ui/utilities/cn";
 import ChatInput from "./components/ChatInput.tsx";
@@ -7,11 +7,11 @@ import { getAssistantEvent } from "@/app/controllers/api/api";
 
 export function Assistant(): JSX.Element {
   const [state, dispatch] = useEventMessages();
-  const userInputRef = useRef<HTMLTextAreaElement>(null);
 
   async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
-    const userInput = userInputRef.current?.value ?? "";
+    const formData = new FormData(event.target);
+    const userInput = String(formData.get("userInput")) || "";
     getAssistantEvent({ userInput, dispatch });
     event.target.reset();
   }
@@ -37,7 +37,7 @@ export function Assistant(): JSX.Element {
       <div className="fixed bottom-0 mb-5 flex w-full justify-center">
         <p className="">{state.currentMessage}</p>
 
-        <ChatInput onSubmit={handleSubmit} userInputRef={userInputRef} />
+        <ChatInput onSubmit={handleSubmit} />
       </div>
     </section>
   );
