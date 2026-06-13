@@ -1,6 +1,6 @@
 import { AssistantAnswerMessage, AssistantQuestionMessage } from "@/app/hooks/useEventMessages";
 import { cn } from "@/app/components/ui/utilities/cn";
-import { ComponentProps, memo } from "react";
+import { ComponentProps, useEffect, useRef } from "react";
 import { JSX } from "react/jsx-runtime";
 
 type ChatMessagesProps = ComponentProps<"section"> & {
@@ -8,8 +8,28 @@ type ChatMessagesProps = ComponentProps<"section"> & {
 };
 
 const ChatMessages = ({ children, messages }: ChatMessagesProps): JSX.Element => {
+  const target = useRef(null);
+
+  useEffect(() => {
+    const config = { attributes: true, childList: true, subtree: true };
+
+    const callback = function (mutationsList, observer) {
+      for (let mutation of mutationsList) {
+        if (mutation.type === "childList") {
+          target.current.scroll({
+            top: target.current.scrollHeight,
+            behavior: "smooth",
+          });
+        }
+      }
+    };
+
+    const observer = new MutationObserver(callback);
+    observer.observe(target.current, config);
+  }, [target]);
+
   return (
-    <section className="w-full overflow-y-auto scroll-smooth">
+    <section className="overflow w-full overflow-y-auto scroll-smooth" ref={target}>
       <ul className="flex w-full flex-col justify-end">
         {messages.length > 0 &&
           messages.map(([msgId, meta], index) => {

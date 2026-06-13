@@ -8,6 +8,9 @@ import ChatMessages from "./components/ChatMessages";
 export function Assistant(): JSX.Element {
   const [state, dispatch] = useEventMessages();
 
+  // FIXME: could be improved
+  const isStreaming = state.currentMessage !== "";
+
   const handleSubmit = useCallback(
     async function (event: SubmitEvent<HTMLFormElement>) {
       event.preventDefault();
@@ -22,12 +25,8 @@ export function Assistant(): JSX.Element {
   return (
     <section className="relative flex h-[80vh] w-full flex-col items-center justify-end">
       <ChatMessages messages={state.messages} />
-
-      <div className="fixed bottom-0 mb-5 flex w-full justify-center">
-        <p className="">{state.currentMessage}</p>
-
-        <ChatInput onSubmit={handleSubmit} />
-      </div>
+      <p className="">{state.currentMessage}</p>
+      <ChatInput onSubmit={handleSubmit} disabled={isStreaming} />
     </section>
   );
 }
