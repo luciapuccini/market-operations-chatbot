@@ -2,6 +2,7 @@ import { AssistantAction } from "@/app/hooks/useEventMessages";
 import { EventStreamMessage } from "@/app/types/types";
 import AbortControllerService from "@/services/eventStream";
 import { ActionDispatch } from "react";
+import { responseEventStream } from "./shemas";
 
 const SIMULATED_ENDPOINT = "/api/chat";
 
@@ -33,9 +34,7 @@ export const getAssistantEvent = async ({
       if (done) break;
 
       const chunk = decoder.decode(value, { stream: true });
-      const cleanData = chunk.split("data: ")[1].trimEnd();
-
-      const finalMessage: EventStreamMessage = JSON.parse(cleanData);
+      const finalMessage = responseEventStream.parse(chunk);
 
       if (finalMessage.type === "token") {
         dispatch({ type: "message", payload: { message: finalMessage.value! } });
