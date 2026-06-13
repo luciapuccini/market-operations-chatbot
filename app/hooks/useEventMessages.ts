@@ -9,7 +9,7 @@ type AssistantState = {
   messages: Array<AssistantAnswerMessage | AssistantQuestionMessage>;
 };
 
-type AssistantAction = {
+export type AssistantAction = {
   type: "question" | "answer" | "message" | "error-answer";
   payload: EventStreamMessage | { message: string };
 };
