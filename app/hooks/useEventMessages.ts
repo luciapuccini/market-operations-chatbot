@@ -1,8 +1,8 @@
 import { useReducer } from "react";
 import { EventStreamMessage } from "../types/types";
 
-type AssistantQuestionMessage = readonly ["question", Record<string, string>];
-type AssistantAnswerMessage = readonly ["answer", Record<string, string>];
+type AssistantQuestionMessage = readonly ["question", Partial<EventStreamMessage>];
+type AssistantAnswerMessage = readonly ["answer", Partial<EventStreamMessage>];
 
 type AssistantState = {
   currentMessage: string;
@@ -11,7 +11,7 @@ type AssistantState = {
 
 export type AssistantAction = {
   type: "question" | "answer" | "message" | "error-answer";
-  payload: EventStreamMessage | { message: string };
+  payload: EventStreamMessage;
 };
 
 const initialState = {
@@ -21,7 +21,13 @@ const initialState = {
 
 const reducerFn = (state: AssistantState, action: AssistantAction): AssistantState => {
   if (action.type === "answer") {
-    const newAnswer = ["answer", { message: state.currentMessage }] as const;
+    const newAnswer = [
+      "answer",
+      {
+        ...action.payload,
+        message: state.currentMessage,
+      },
+    ] as const;
     return {
       ...state,
       messages: [...state.messages, newAnswer],
@@ -42,7 +48,7 @@ const reducerFn = (state: AssistantState, action: AssistantAction): AssistantSta
   if (action.type === "message") {
     return {
       ...state,
-      currentMessage: state.currentMessage + action.payload.message,
+      currentMessage: state.currentMessage + action.payload.value,
     };
   }
 

@@ -1,5 +1,4 @@
 import { AssistantAction } from "@/app/hooks/useEventMessages";
-import { EventStreamMessage } from "@/app/types/types";
 import AbortControllerService from "@/services/eventStream";
 import { ActionDispatch } from "react";
 import { responseEventStream } from "./shemas";
@@ -13,7 +12,7 @@ export const getAssistantEvent = async ({
   userInput: string;
   dispatch: ActionDispatch<[action: AssistantAction]>;
 }): Promise<void> => {
-  dispatch({ type: "question", payload: { message: userInput } });
+  dispatch({ type: "question", payload: { message: userInput, type: "done" } });
 
   try {
     const response = await fetch(SIMULATED_ENDPOINT, {
@@ -37,11 +36,10 @@ export const getAssistantEvent = async ({
       const finalMessage = responseEventStream.parse(chunk);
 
       if (finalMessage.type === "token") {
-        dispatch({ type: "message", payload: { message: finalMessage.value! } });
+        dispatch({ type: "message", payload: finalMessage });
       }
 
       if (finalMessage.type === "done") {
-        // WIP: no need payload
         dispatch({ type: "answer", payload: finalMessage });
       }
 

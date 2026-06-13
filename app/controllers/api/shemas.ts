@@ -31,6 +31,7 @@ export type EventStreamTypes = EventStreamMessage["type"];
 export type EventStreamKinds = NonNullable<EventStreamMessage["kind"]>;
 export type EventStreamConfidence = EventStreamMessage["confidence"];
 
+// TODO: could get more detailed -- nice to have
 // data: {"type":"token","value":"this "}
 // data: {"type":"done","kind":"low_confidence","citations":[],"confidence":"low"}
 // data: {"type":"error","message":"Simulated upstream."}
