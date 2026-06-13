@@ -37,7 +37,8 @@ const reducerFn = (state: AssistantState, action: AssistantAction): AssistantSta
 
   if (action.type === "error-answer") {
     const payloadError = action.payload.message || "";
-    const newErrorMessage = ["answer", { message: payloadError }] as const;
+
+    const newErrorMessage = ["answer", { message: payloadError, type: "error" }] as const;
 
     return {
       ...state,
