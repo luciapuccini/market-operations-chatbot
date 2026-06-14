@@ -8,6 +8,7 @@ export type AssistantMessage = AssistantAnswerMessage | AssistantQuestionMessage
 
 type AssistantState = {
   currentMessage: string;
+  isStreaming: boolean;
   messages: Array<AssistantAnswerMessage | AssistantQuestionMessage>;
 };
 
@@ -19,6 +20,7 @@ export type AssistantAction = {
 const initialState = {
   messages: [],
   currentMessage: "",
+  isStreaming: false,
 };
 
 const reducerFn = (state: AssistantState, action: AssistantAction): AssistantState => {
@@ -34,6 +36,7 @@ const reducerFn = (state: AssistantState, action: AssistantAction): AssistantSta
       ...state,
       messages: [...state.messages, newAnswer],
       currentMessage: "",
+      isStreaming: false,
     };
   }
 
@@ -52,6 +55,7 @@ const reducerFn = (state: AssistantState, action: AssistantAction): AssistantSta
     return {
       ...state,
       currentMessage: state.currentMessage + action.payload.value,
+      isStreaming: true,
     };
   }
 

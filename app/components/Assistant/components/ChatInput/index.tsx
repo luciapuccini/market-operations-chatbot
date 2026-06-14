@@ -1,12 +1,12 @@
 "use client";
 import { JSX, ComponentPropsWithoutRef, memo, useRef } from "react";
-import AbortControllerService from "@/services/eventStream";
+import AbortControllerService from "@/services/abortController";
 import Button from "@/app/components/ui/Button";
 import { Textarea } from "@/app/components/ui/TextArea";
 
-type ChatInputProps = ComponentPropsWithoutRef<"form"> & { disabled: boolean };
+type ChatInputProps = ComponentPropsWithoutRef<"form"> & { isStreaming: boolean };
 
-const ChatInput = ({ children, onSubmit, disabled }: ChatInputProps): JSX.Element => {
+const ChatInput = ({ onSubmit, isStreaming }: ChatInputProps): JSX.Element => {
   const formref = useRef<HTMLFormElement>(null);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -27,7 +27,7 @@ const ChatInput = ({ children, onSubmit, disabled }: ChatInputProps): JSX.Elemen
         <Textarea
           onKeyDown={handleKeyDown}
           rows={1}
-          disabled={disabled}
+          disabled={isStreaming}
           id="query"
           key="user-input-text-area"
           name="userInput"
@@ -36,14 +36,16 @@ const ChatInput = ({ children, onSubmit, disabled }: ChatInputProps): JSX.Elemen
           className="min-h-[120px] resize-none border-0 bg-transparent px-4 py-3 text-base placeholder:text-[color-mix(in_oklch,var(--muted-foreground)_60%,transparent)] focus-visible:ring-0 focus-visible:ring-offset-0"
         />
         <div className="flex items-center justify-between border-t border-[color-mix(in_oklch,var(--border)_50%,transparent)] px-4 py-3">
-          <Button type="submit" disabled={disabled}>
+          <Button type="submit" disabled={isStreaming}>
             ask question
           </Button>
           <Button
             type="button"
             variant="destructive"
             onClick={() => {
-              AbortControllerService().abort("user cancelled");
+              AbortControllerService().abort("User cancelled");
+              // TODO: implement aborted state / feature -- should be able to continue chat
+              window.alert("User Aborted, re-start");
             }}
           >
             cancel

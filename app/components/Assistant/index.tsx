@@ -4,13 +4,15 @@ import { useEventMessages } from "@/app/hooks/useEventMessages";
 import ChatInput from "./components/ChatInput";
 import { getAssistantEvent } from "@/app/controllers/api/api";
 import ChatMessages from "./components/ChatMessages";
-import { Logo } from "../ui/Logo";
+import Logo from "../ui/Logo";
 
 export function Assistant(): JSX.Element {
+  // FIXME:
+  // Assistant has the responsability of App state management
+  // could improve performance with zustand -- subscribe lower comps to only the state slice they care about
   const [state, dispatch] = useEventMessages();
 
-  // FIXME: could be improved
-  const isStreaming = state.currentMessage !== "";
+  const isStreaming = state.isStreaming;
   const isConversationStarted = state.messages.length > 0;
 
   const handleSubmit = useCallback(
@@ -41,11 +43,9 @@ export function Assistant(): JSX.Element {
           </div>
         </div>
       )}
-      {/* <section className="flex w-full flex-col justify-end"> */}
-      <ChatMessages messages={state.messages} />
-      <p className="">{state.currentMessage}</p>
-      <ChatInput onSubmit={handleSubmit} disabled={isStreaming} />
-      {/* </section> */}
+      <ChatMessages messages={state.messages} currentMessage={state.currentMessage} />
+
+      <ChatInput onSubmit={handleSubmit} isStreaming={isStreaming} />
     </>
   );
 }

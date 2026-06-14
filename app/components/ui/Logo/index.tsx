@@ -1,6 +1,7 @@
+import { memo } from "react";
 import { cn } from "../../utilities/cn";
 
-export function Logo({ className }: { className?: string }) {
+function Logo({ className }: { className?: string }) {
   return (
     <svg
       width="47"
@@ -217,3 +218,5 @@ export function Logo({ className }: { className?: string }) {
     </svg>
   );
 }
+
+export default memo(Logo);

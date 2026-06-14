@@ -1,15 +1,18 @@
+"use client";
 import { AssistantAnswerMessage, AssistantQuestionMessage } from "@/app/hooks/useEventMessages";
 import { ComponentProps, useEffect, useRef } from "react";
 import { JSX } from "react/jsx-runtime";
-import { ChatMessage } from "./components/ChatMessage";
+import ChatMessage from "./components/ChatMessage";
+import ChatMessageSkeleton from "../ChatMessageSkeleton";
 
 type ChatMessagesProps = ComponentProps<"section"> & {
   messages: Array<AssistantAnswerMessage | AssistantQuestionMessage>;
+  currentMessage: string;
 };
 
-const ChatMessages = ({ children, messages }: ChatMessagesProps): JSX.Element => {
+const ChatMessages = ({ messages, currentMessage }: ChatMessagesProps): JSX.Element => {
   const target = useRef<HTMLElement | null>(null);
-
+  const isStreaming = currentMessage.length > 1;
   useEffect(() => {
     if (!target.current) {
       return;
@@ -41,9 +44,13 @@ const ChatMessages = ({ children, messages }: ChatMessagesProps): JSX.Element =>
   }, [target]);
 
   return (
-    <section className="overflow mb-4 w-full overflow-y-auto scroll-smooth" ref={target}>
-      <ul className="flex w-full flex-col justify-end">
+    <section
+      className="overflow mb-4 w-full scrollbar-thin scrollbar-thumb-gray-300 overflow-y-auto scroll-smooth"
+      ref={target}
+    >
+      <ul className="flex w-full flex-col justify-end px-1">
         {messages.length > 0 && messages.map((m, index) => <ChatMessage key={`${m[0]}-${index}`} message={m} />)}
+        {isStreaming && <ChatMessageSkeleton>{currentMessage}</ChatMessageSkeleton>}
       </ul>
     </section>
   );

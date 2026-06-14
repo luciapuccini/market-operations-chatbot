@@ -1,5 +1,5 @@
 import { AssistantAction } from "@/app/hooks/useEventMessages";
-import AbortControllerService from "@/services/eventStream";
+import AbortControllerService from "@/services/abortController";
 import { ActionDispatch } from "react";
 import { responseEventStream } from "./schemas";
 

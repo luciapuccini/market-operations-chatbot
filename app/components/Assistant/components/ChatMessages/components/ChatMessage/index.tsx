@@ -1,21 +1,22 @@
-import { Logo } from "@/app/components/ui/Logo";
+import Logo from "@/app/components/ui/Logo";
 import { AssistantMessage } from "@/app/hooks/useEventMessages";
 import { cn } from "@/app/components/utilities/cn";
+import { memo } from "react";
 
 interface ChatMessageProps {
   message: AssistantMessage;
 }
 
-export function ChatMessage({ message }: ChatMessageProps) {
+function ChatMessage({ message }: ChatMessageProps) {
   const [messageType, content] = message;
   const isUser = messageType === "question";
 
   return (
-    <li className={cn("flex gap-4", isUser ? "justify-end" : "justify-start")}>
+    <li className={cn("flex gap-4 py-8", isUser ? "justify-end" : "justify-start")}>
       {!isUser && (
-        <div className="shrink-0">
+        <div className="shrink-0 self-end">
           <div className="flex size-8 items-center justify-center rounded-full bg-[var(--secondary)]">
-            <Logo className="size-6" />
+            <Logo className="size-4" />
           </div>
         </div>
       )}
@@ -32,7 +33,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
       </div>
 
       {isUser && (
-        <div className="shrink-0">
+        <div className="shrink-0 self-end">
           <div className="flex size-8 items-center justify-center rounded-full bg-[var(--secondary)]">
             <p>U</p>
           </div>
@@ -41,3 +42,5 @@ export function ChatMessage({ message }: ChatMessageProps) {
     </li>
   );
 }
+
+export default memo(ChatMessage);
