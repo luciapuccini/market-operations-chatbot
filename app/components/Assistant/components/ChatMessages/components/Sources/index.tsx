@@ -3,6 +3,7 @@ import { Item, ItemContent, ItemTitle, ItemDescription } from "@/app/components/
 import { cn } from "@/app/components/utilities/cn";
 
 import { EventStreamCitation } from "@/app/controllers/api/schemas";
+import Link from "next/link";
 import { ComponentProps, JSX } from "react";
 
 type SourcesProps = ComponentProps<"article"> & {
@@ -10,28 +11,25 @@ type SourcesProps = ComponentProps<"article"> & {
   citations: EventStreamCitation[];
 };
 
-const getCitationLink = (citation: EventStreamCitation) => {
-  //FIXME:
-  return `/?market=${citation.marketId}&period=${citation.period}&product=${citation.productId}&region=${citation.regionId}`;
+const getCitationLink = (citation: Omit<EventStreamCitation, "label">): string => {
+  const newParams = new URLSearchParams([...Object.entries(citation).filter(Boolean)]);
+  return "/?" + newParams.toString();
 };
 
 export default function Sources({ children, citations, confidence }: SourcesProps): JSX.Element {
   return (
-    <details className="flex w-full max-w-md flex-col gap-4">
-      <summary className="list-none">
+    <details className="flex w-full max-w-sm flex-col gap-4">
+      <summary className="ml-10 list-none">
         <Badge variant="outline" className="hover:cursor-pointer">
           Sources
         </Badge>
       </summary>
       <section className="flex w-full max-w-md flex-col gap-4">
-        {citations.map((cit, idx) => (
-          <Item asChild variant="outline" key={`${idx}-${cit.period}`} className="hover:bg-gray-100" size="xs">
-            <a
-              // {/* TODO:  default values and better with zod */}
-              href={getCitationLink(cit)}
-            >
+        {citations.map(({ label, ...rest }, idx) => (
+          <Item asChild variant="outline" key={`${idx}-${label}`} className="hover:bg-gray-100" size="xs">
+            <Link href={getCitationLink(rest)}>
               <ItemContent>
-                <ItemTitle>{cit.label}</ItemTitle>
+                <ItemTitle>{label}</ItemTitle>
                 <ItemDescription
                   className={cn(
                     confidence === "high"
@@ -44,7 +42,7 @@ export default function Sources({ children, citations, confidence }: SourcesProp
                   Confidence level: {confidence}
                 </ItemDescription>
               </ItemContent>
-            </a>
+            </Link>
           </Item>
         ))}
       </section>

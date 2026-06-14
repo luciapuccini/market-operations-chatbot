@@ -2,7 +2,7 @@ import z from "zod";
 
 export const regionId = z.literal(["na", "eu", "apac", "latam"]);
 export const productId = z.literal(["veltrix", "nuvora", "orbispan", "calyx", "zephyra"]);
-export const marketId = z.literal(["us", "ca", "de", "gb", "fr", "it", "es", "jp", "ch", "in", "au", "br", "mx"]);
+export const marketId = z.literal(["us", "ca", "de", "gb", "fr", "it", "es", "jp", "cn", "in", "au", "br", "mx"]);
 
 export type RegionsId = z.infer<typeof regionId>;
 export type ProductsId = z.infer<typeof productId>;

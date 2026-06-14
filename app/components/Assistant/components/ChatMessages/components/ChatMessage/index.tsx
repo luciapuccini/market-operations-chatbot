@@ -12,9 +12,9 @@ function ChatMessage({ message }: ChatMessageProps) {
   const [messageType, content] = message;
   const isUser = messageType === "question";
 
-  const { citations, confidence } = content;
+  const { citations, confidence, type } = content;
   const hasSources = citations && citations?.length > 0 && confidence;
-
+  const isError = type === "error";
   return (
     <li>
       <section className={cn("flex gap-4 py-8", isUser ? "justify-end" : "justify-start")}>
@@ -29,9 +29,8 @@ function ChatMessage({ message }: ChatMessageProps) {
         <div
           className={cn(
             "max-w-[80%] rounded-2xl border-r px-4 py-3",
-            isUser
-              ? "rounded-br-none bg-[var(--primary)] text-[var(--primary-foreground)]"
-              : "rounded-bl-none bg-[var(--secondary)]",
+            isUser ? "rounded-br-none bg-(--primary) text-(--primary-foreground)" : "rounded-bl-none bg-(--secondary)",
+            isError && "rounded-br-none bg-red-100 text-red-800",
           )}
         >
           <p className="text-sm leading-relaxed">{content.message}</p>
