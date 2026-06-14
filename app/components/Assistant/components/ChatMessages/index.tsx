@@ -8,13 +8,21 @@ type ChatMessagesProps = ComponentProps<"section"> & {
 };
 
 const ChatMessages = ({ children, messages }: ChatMessagesProps): JSX.Element => {
-  const target = useRef(null);
+  const target = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
+    if (!target.current) {
+      return;
+    }
+
     const config = { attributes: true, childList: true, subtree: true };
 
-    const callback = function (mutationsList, observer) {
-      for (let mutation of mutationsList) {
+    const callback = function (mutationsList: MutationRecord[]) {
+      if (!target.current) {
+        return;
+      }
+
+      for (const mutation of mutationsList) {
         if (mutation.type === "childList") {
           target.current.scroll({
             top: target.current.scrollHeight,
@@ -26,6 +34,10 @@ const ChatMessages = ({ children, messages }: ChatMessagesProps): JSX.Element =>
 
     const observer = new MutationObserver(callback);
     observer.observe(target.current, config);
+
+    return () => {
+      observer.disconnect();
+    };
   }, [target]);
 
   return (

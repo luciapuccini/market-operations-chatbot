@@ -21,9 +21,9 @@ const ChatInput = ({ children, onSubmit, disabled }: ChatInputProps): JSX.Elemen
     <form
       onSubmit={onSubmit}
       ref={formref}
-      className="border-border bg-secondary fixed top-[75%] left-1/4 w-1/2 border p-1"
+      className="fixed top-[75%] left-1/4 w-1/2 border border-[var(--border)] bg-[var(--secondary)] p-1"
     >
-      <div className="bg-card">
+      <div className="bg-[var(--card)]">
         <Textarea
           onKeyDown={handleKeyDown}
           rows={1}
@@ -33,9 +33,9 @@ const ChatInput = ({ children, onSubmit, disabled }: ChatInputProps): JSX.Elemen
           name="userInput"
           placeholder="Ask me anything..."
           required
-          className="placeholder:text-muted-foreground/60 min-h-[120px] resize-none border-0 bg-transparent px-4 py-3 text-base focus-visible:ring-0 focus-visible:ring-offset-0"
+          className="min-h-[120px] resize-none border-0 bg-transparent px-4 py-3 text-base placeholder:text-[color-mix(in_oklch,var(--muted-foreground)_60%,transparent)] focus-visible:ring-0 focus-visible:ring-offset-0"
         />
-        <div className="border-border/50 flex items-center justify-between border-t px-4 py-3">
+        <div className="flex items-center justify-between border-t border-[color-mix(in_oklch,var(--border)_50%,transparent)] px-4 py-3">
           <Button type="submit" disabled={disabled}>
             ask question
           </Button>

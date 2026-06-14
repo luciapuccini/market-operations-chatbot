@@ -37,7 +37,7 @@ export function Assistant(): JSX.Element {
 
           <div className="space-y-4 text-center">
             <h1 className="text-2xl font-semibold tracking-tight">Market Operations Assistant</h1>
-            <p className="text-foreground text-2xl">Tell me everything you need</p>
+            <p className="text-2xl text-[var(--foreground)]">Tell me everything you need</p>
           </div>
         </div>
       )}

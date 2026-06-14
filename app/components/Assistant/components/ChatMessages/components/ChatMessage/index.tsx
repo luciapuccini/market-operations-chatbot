@@ -14,7 +14,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
     <li className={cn("flex gap-4", isUser ? "justify-end" : "justify-start")}>
       {!isUser && (
         <div className="shrink-0">
-          <div className="bg-secondary flex size-8 items-center justify-center rounded-full">
+          <div className="flex size-8 items-center justify-center rounded-full bg-[var(--secondary)]">
             <Logo className="size-6" />
           </div>
         </div>
@@ -23,7 +23,9 @@ export function ChatMessage({ message }: ChatMessageProps) {
       <div
         className={cn(
           "max-w-[80%] rounded-2xl border-r px-4 py-3",
-          isUser ? "bg-primary text-primary-foreground rounded-br-none" : "bg-secondary rounded-bl-none",
+          isUser
+            ? "rounded-br-none bg-[var(--primary)] text-[var(--primary-foreground)]"
+            : "rounded-bl-none bg-[var(--secondary)]",
         )}
       >
         <p className="text-sm leading-relaxed">{content.message}</p>
@@ -31,7 +33,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
 
       {isUser && (
         <div className="shrink-0">
-          <div className="bg-secondary flex size-8 items-center justify-center rounded-full">
+          <div className="flex size-8 items-center justify-center rounded-full bg-[var(--secondary)]">
             <p>U</p>
           </div>
         </div>
