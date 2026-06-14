@@ -6,7 +6,7 @@ function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
     <textarea
       data-slot="textarea"
       className={cn(
-        "flex field-sizing-content min-h-16 w-full rounded-none border border-[var(--input)] bg-transparent px-2.5 py-2 text-xs transition-colors outline-none placeholder:text-[var(--muted-foreground)] focus-visible:border-[var(--ring)] focus-visible:ring-1 focus-visible:ring-[color-mix(in_oklch,var(--ring)_50%,transparent)] disabled:cursor-not-allowed disabled:bg-[color-mix(in_oklch,var(--input)_50%,transparent)] disabled:opacity-50 aria-invalid:border-[var(--destructive)] aria-invalid:ring-1 aria-invalid:ring-[color-mix(in_oklch,var(--destructive)_20%,transparent)] dark:bg-[color-mix(in_oklch,var(--input)_30%,transparent)] dark:disabled:bg-[color-mix(in_oklch,var(--input)_80%,transparent)] dark:aria-invalid:border-[color-mix(in_oklch,var(--destructive)_50%,transparent)] dark:aria-invalid:ring-[color-mix(in_oklch,var(--destructive)_40%,transparent)] md:text-xs",
+        "border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 disabled:bg-input/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 flex field-sizing-content min-h-16 w-full rounded-lg border bg-transparent px-2.5 py-2 text-base transition-colors outline-none focus-visible:ring-3 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:ring-3 md:text-sm",
         className,
       )}
       {...props}

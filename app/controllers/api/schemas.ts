@@ -8,20 +8,20 @@ export type RegionsId = z.infer<typeof regionId>;
 export type ProductsId = z.infer<typeof productId>;
 export type MarketsId = z.infer<typeof marketId>;
 
-export const eventStreamCitations = z.object({
+export const eventStreamCitation = z.object({
   period: z.templateLiteral([z.string(), "-", z.string()]),
   label: z.string(),
   regionId: regionId.optional(),
   marketId: marketId.optional(),
   productId: productId.optional(),
 });
-export type EventStreamCitations = z.infer<typeof eventStreamCitations>;
+export type EventStreamCitation = z.infer<typeof eventStreamCitation>;
 
 export const eventStreamMessage = z.object({
   type: z.literal(["token", "done", "error"]),
   value: z.string().optional(),
   kind: z.literal(["normal", "low_confidence", "abstain", "error"]).optional(),
-  citations: z.array(eventStreamCitations).optional(),
+  citations: z.array(eventStreamCitation).optional(),
   confidence: z.literal(["low", "high", "medium"]).optional(),
   message: z.string().optional(),
 });
