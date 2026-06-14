@@ -2,6 +2,7 @@
 import { JSX, ComponentPropsWithoutRef, memo, useRef } from "react";
 import AbortControllerService from "@/services/eventStream";
 import Button from "@/app/components/ui/Button";
+import { Textarea } from "@/app/components/ui/TextArea";
 
 type ChatInputProps = ComponentPropsWithoutRef<"form"> & { disabled: boolean };
 
@@ -17,34 +18,37 @@ const ChatInput = ({ children, onSubmit, disabled }: ChatInputProps): JSX.Elemen
   };
 
   return (
-    <form onSubmit={onSubmit} className="mx-10 w-full" ref={formref}>
-      <label htmlFor="query" className="sr-only">
-        User:
-      </label>
-      <div className="flex w-full justify-center gap-1.5">
-        <textarea
+    <form
+      onSubmit={onSubmit}
+      ref={formref}
+      className="border-border bg-secondary fixed top-[75%] left-1/4 w-1/2 border p-1"
+    >
+      <div className="bg-card">
+        <Textarea
           onKeyDown={handleKeyDown}
-          rows={2}
-          className="rounded-lg border border-slate-200 bg-transparent p-1.5 px-1.5 py-0.5 text-slate-900 shadow-sm transition-all duration-200 outline-none placeholder:text-slate-400 focus-within:border-amber-400 focus-within:ring-2 focus-within:ring-amber-400/20 disabled:cursor-not-allowed disabled:bg-slate-200"
+          rows={1}
           disabled={disabled}
           id="query"
           key="user-input-text-area"
           name="userInput"
           placeholder="Ask me anything..."
           required
+          className="placeholder:text-muted-foreground/60 min-h-[120px] resize-none border-0 bg-transparent px-4 py-3 text-base focus-visible:ring-0 focus-visible:ring-offset-0"
         />
-        <Button type="submit" disabled={disabled}>
-          ask question
-        </Button>
-        <Button
-          type="button"
-          className="bg-red-400 hover:bg-red-500"
-          onClick={() => {
-            AbortControllerService().abort("user cancelled");
-          }}
-        >
-          cancel
-        </Button>
+        <div className="border-border/50 flex items-center justify-between border-t px-4 py-3">
+          <Button type="submit" disabled={disabled}>
+            ask question
+          </Button>
+          <Button
+            type="button"
+            variant="destructive"
+            onClick={() => {
+              AbortControllerService().abort("user cancelled");
+            }}
+          >
+            cancel
+          </Button>
+        </div>
       </div>
     </form>
   );
