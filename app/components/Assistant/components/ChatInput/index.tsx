@@ -25,6 +25,7 @@ const ChatInput = ({ onSubmit, isStreaming, onCancel }: ChatInputProps): JSX.Ele
     >
       <div className="bg-[var(--card)]">
         <Textarea
+          data-testid="userInput"
           onKeyDown={handleKeyDown}
           rows={1}
           disabled={isStreaming}
