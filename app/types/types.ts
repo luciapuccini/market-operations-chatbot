@@ -1,5 +1,5 @@
 export type {
-  EventStreamCitations,
+  EventStreamCitation,
   EventStreamConfidence,
   EventStreamKinds,
   EventStreamMessage,

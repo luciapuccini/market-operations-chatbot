@@ -36,7 +36,9 @@ export default function DataCard({ data, variant }: DataCardProps): JSX.Element 
     return (
       <Card className="@container/card">
         <CardHeader>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">{data.name}</CardTitle>
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+            {data.name as string}
+          </CardTitle>
         </CardHeader>
       </Card>
     );
