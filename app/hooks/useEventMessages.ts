@@ -13,7 +13,7 @@ type AssistantState = {
 };
 
 export type AssistantAction = {
-  type: "question" | "answer" | "message" | "error-answer";
+  type: "question" | "answer" | "message" | "error-answer" | "abort";
   payload: EventStreamMessage;
 };
 
@@ -47,6 +47,15 @@ const reducerFn = (state: AssistantState, action: AssistantAction): AssistantSta
 
     return {
       ...state,
+      messages: [...state.messages, newErrorMessage],
+    };
+  }
+  if (action.type === "abort") {
+    const newErrorMessage = ["answer", { message: "User Aborted Request...", type: "error" }] as const;
+    return {
+      ...state,
+      currentMessage: "",
+      isStreaming: false,
       messages: [...state.messages, newErrorMessage],
     };
   }

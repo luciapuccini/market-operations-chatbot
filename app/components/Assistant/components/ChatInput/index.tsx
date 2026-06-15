@@ -1,12 +1,12 @@
 "use client";
 import { JSX, ComponentPropsWithoutRef, memo, useRef } from "react";
-import AbortControllerService from "@/services/abortController";
+
 import Button from "@/app/components/ui/Button";
 import { Textarea } from "@/app/components/ui/TextArea";
 
-type ChatInputProps = ComponentPropsWithoutRef<"form"> & { isStreaming: boolean };
+type ChatInputProps = ComponentPropsWithoutRef<"form"> & { isStreaming: boolean; onCancel: () => void };
 
-const ChatInput = ({ onSubmit, isStreaming }: ChatInputProps): JSX.Element => {
+const ChatInput = ({ onSubmit, isStreaming, onCancel }: ChatInputProps): JSX.Element => {
   const formref = useRef<HTMLFormElement>(null);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -43,9 +43,7 @@ const ChatInput = ({ onSubmit, isStreaming }: ChatInputProps): JSX.Element => {
             type="button"
             variant="destructive"
             onClick={() => {
-              AbortControllerService().abort("User cancelled");
-              // TODO: implement aborted state / feature -- should be able to continue chat
-              window.alert("User Aborted, re-start");
+              onCancel();
             }}
           >
             cancel

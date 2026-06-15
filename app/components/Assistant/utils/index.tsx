@@ -1,9 +1,14 @@
-import { AssistantAction } from "@/app/hooks/useEventMessages";
-import AbortControllerService from "@/services/abortController";
 import { ActionDispatch } from "react";
-import { responseEventStream } from "./schemas";
+import { AssistantAction } from "@/app/hooks/useEventMessages";
+import { responseEventStream } from "@/app/controllers/api/schemas";
 
 const SIMULATED_ENDPOINT = "/api/chat";
+
+let controller: AbortController;
+
+export const abortCurrentRequest = () => {
+  controller.abort();
+};
 
 export const getAssistantEvent = async ({
   userInput,
@@ -14,12 +19,17 @@ export const getAssistantEvent = async ({
 }): Promise<void> => {
   dispatch({ type: "question", payload: { message: userInput, type: "done" } });
 
+  if (controller) {
+    controller.abort();
+  }
+  controller = new AbortController();
+
   try {
     const response = await fetch(SIMULATED_ENDPOINT, {
       method: "POST",
       body: JSON.stringify({ question: userInput }),
       headers: { "Content-Type": "application/json" },
-      signal: AbortControllerService().signal,
+      signal: controller.signal,
     });
     if (!response.ok || !response.body) {
       throw new Error("bad stream");

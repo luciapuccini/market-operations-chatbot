@@ -2,9 +2,10 @@
 import { SubmitEvent, JSX, useCallback } from "react";
 import { useEventMessages } from "@/app/hooks/useEventMessages";
 import ChatInput from "./components/ChatInput";
-import { getAssistantEvent } from "@/app/controllers/api/api";
+
 import ChatMessages from "./components/ChatMessages";
 import Logo from "../ui/Logo";
+import { abortCurrentRequest, getAssistantEvent } from "./utils";
 
 export function Assistant(): JSX.Element {
   // FIXME:
@@ -20,12 +21,17 @@ export function Assistant(): JSX.Element {
       event.preventDefault();
       const formData = new FormData(event.target);
       const userInput = String(formData.get("userInput")) || "";
-      getAssistantEvent({ userInput, dispatch });
+      await getAssistantEvent({ userInput, dispatch });
       event.target.reset();
     },
-
     [dispatch],
   );
+
+  const handleCancel = useCallback(async () => {
+    dispatch({ type: "abort", payload: { message: "suer aabortede", type: "error" } });
+    await abortCurrentRequest();
+  }, [dispatch]);
+
   return (
     <>
       {!isConversationStarted && (
@@ -45,7 +51,7 @@ export function Assistant(): JSX.Element {
       )}
       <ChatMessages messages={state.messages} currentMessage={state.currentMessage} />
 
-      <ChatInput onSubmit={handleSubmit} isStreaming={isStreaming} />
+      <ChatInput onSubmit={handleSubmit} isStreaming={isStreaming} onCancel={handleCancel} />
     </>
   );
 }
