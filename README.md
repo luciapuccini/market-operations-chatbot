@@ -7,8 +7,8 @@ Simple ai chatbot project
 - Tailwind and shadcn for styling
 - Typescript
 - Zod for runtime schema validations
-- Jest
 - Netlify [deploy](market-operations-assistant.netlify.app)
+- vitest
 
 
 ## Overview 
@@ -22,17 +22,17 @@ Simple ai chatbot project
 
 ```
   app/                    
-    page.tsx             # Assistant main rout
+    page.tsx              # Assistant main route
     components/           # Shared layout components & utils
+              Assistant/  # main components for chat
               ui/         # Shadcn and core components    
     controllers/          # Server logic, server actions & schema validation 
-                api.ts    # Handle streaming request
+                api.ts    # Zod schemas validatin for straming response
     dashboard/
              page.tsx     # Sample Dashboard page
     api/chat              # Moked streaming API endpoint
   data/                   # Mocked Data
-  services/               # Integrations and server/client service modules
-  tests/                  # Test setup and automated tests
+  tests/                  # Simple unit test set up
 ```
 
 ---
@@ -51,6 +51,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 
 ## Next Steps
-**Ideas Intentionally open for future development**
+**Ideas open for future development**
 
 - Dashboard complete view with dymanic content from data.json
+- e2e testing with playwright
+- bundle analyzer set up
