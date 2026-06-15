@@ -16,7 +16,7 @@ function ChatMessage({ message }: ChatMessageProps) {
   const hasSources = citations && citations?.length > 0 && confidence;
   const isError = type === "error";
   return (
-    <li>
+    <li data-testid="chat-message">
       <section className={cn("flex gap-4 py-8", isUser ? "justify-end" : "justify-start")}>
         {!isUser && (
           <div className="shrink-0 self-end">
