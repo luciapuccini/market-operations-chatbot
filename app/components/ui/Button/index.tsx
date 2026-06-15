@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "../../utilities/cn";
+import { cn } from "../../utilities";
 
 const buttonVariants = cva(
   "group/button inline-flex shrink-0 items-center justify-center rounded-none border border-transparent bg-clip-padding text-xs font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-[var(--ring)] focus-visible:ring-1 focus-visible:ring-[color-mix(in_oklch,var(--ring)_50%,transparent)] active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-[var(--destructive)] aria-invalid:ring-1 aria-invalid:ring-[color-mix(in_oklch,var(--destructive)_20%,transparent)] dark:aria-invalid:border-[color-mix(in_oklch,var(--destructive)_50%,transparent)] dark:aria-invalid:ring-[color-mix(in_oklch,var(--destructive)_40%,transparent)] [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",

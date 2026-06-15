@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { cn } from "../../utilities/cn";
+import { cn } from "../../utilities";
 
 function Logo({ className }: { className?: string }) {
   return (

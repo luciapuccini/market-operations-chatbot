@@ -1,6 +1,6 @@
 import Logo from "@/app/components/ui/Logo";
 import { AssistantMessage } from "@/app/hooks/useEventMessages";
-import { cn } from "@/app/components/utilities/cn";
+import { cn } from "@/app/components/utilities";
 import { memo } from "react";
 import Sources from "../Sources";
 

@@ -7,9 +7,11 @@ export const marketId = z.literal(["us", "ca", "de", "gb", "fr", "it", "es", "jp
 export type RegionsId = z.infer<typeof regionId>;
 export type ProductsId = z.infer<typeof productId>;
 export type MarketsId = z.infer<typeof marketId>;
+const period = z.templateLiteral([z.string(), "-", z.string()]);
+export type Period = z.infer<typeof period>;
 
 export const eventStreamCitation = z.object({
-  period: z.templateLiteral([z.string(), "-", z.string()]),
+  period,
   label: z.string(),
   regionId: regionId.optional(),
   marketId: marketId.optional(),

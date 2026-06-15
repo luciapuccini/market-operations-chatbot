@@ -1,6 +1,6 @@
 import { Badge } from "@/app/components/ui/Badge";
 import { Item, ItemContent, ItemTitle, ItemDescription } from "@/app/components/ui/Item";
-import { cn } from "@/app/components/utilities/cn";
+import { cn } from "@/app/components/utilities";
 
 import { EventStreamCitation } from "@/app/controllers/api/schemas";
 import Link from "next/link";
@@ -13,10 +13,10 @@ type SourcesProps = ComponentProps<"article"> & {
 
 const getCitationLink = (citation: Omit<EventStreamCitation, "label">): string => {
   const newParams = new URLSearchParams([...Object.entries(citation).filter(Boolean)]);
-  return "/?" + newParams.toString();
+  return "dashboard/?" + newParams.toString();
 };
 
-export default function Sources({ children, citations, confidence }: SourcesProps): JSX.Element {
+export default function Sources({ citations, confidence }: SourcesProps): JSX.Element {
   return (
     <details className="flex w-full max-w-sm flex-col gap-4">
       <summary className="ml-10 list-none">
