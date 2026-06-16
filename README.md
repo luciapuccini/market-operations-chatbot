@@ -58,3 +58,4 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - try some evals for ai answer testing
 - bundle analyzer set up
 - feed back interactions to evaluate answers
+- save current conversation state in localstorage with a chat uuid - chat history feature

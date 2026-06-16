@@ -30,7 +30,7 @@ function ChatMessage({ message }: ChatMessageProps) {
           className={cn(
             "max-w-[80%] rounded-2xl border-r px-4 py-3",
             isUser ? "rounded-br-none bg-(--primary) text-(--primary-foreground)" : "rounded-bl-none bg-(--secondary)",
-            isError && "rounded-br-none bg-red-100 text-red-800",
+            isError && "bg-destructive/10 text-destructive",
           )}
         >
           <p className="text-sm leading-relaxed">{content.message}</p>
