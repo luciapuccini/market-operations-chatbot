@@ -57,14 +57,12 @@ export const getAssistantEvent = async ({
         const event = part.trim();
         if (!event) continue;
 
-        const dataLines = event
+        const payload = event
           .split("\n")
-          .filter((line) => line.startsWith("data:"))
-          .map((line) => line.slice(5).trimStart());
+          .map((line) => responseEventStream.safeParse(line.trim()))
+          .find((result) => result.success)?.data;
 
-        if (dataLines.length === 0) continue;
-
-        const payload = JSON.parse(dataLines.join("\n"));
+        if (!payload) continue;
 
         if (payload.type === "token") {
           dispatch({ type: "message", payload });
