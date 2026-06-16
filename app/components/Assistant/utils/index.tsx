@@ -38,25 +38,45 @@ export const getAssistantEvent = async ({
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
 
+    let buffer = "";
+
     while (true) {
       const { value, done } = await reader.read();
-      if (done) break;
 
-      const chunk = decoder.decode(value, { stream: true });
-      const finalMessage = responseEventStream.parse(chunk);
-
-      if (finalMessage.type === "token") {
-        setTimeout(() => {
-          dispatch({ type: "message", payload: finalMessage });
-        }, 0);
+      if (done) {
+        buffer += decoder.decode();
+        break;
       }
 
-      if (finalMessage.type === "done") {
-        dispatch({ type: "answer", payload: finalMessage });
-      }
+      buffer += decoder.decode(value, { stream: true });
 
-      if (finalMessage.type === "error") {
-        dispatch({ type: "error-answer", payload: finalMessage });
+      const parts = buffer.split("\n\n");
+      buffer = parts.pop() ?? "";
+
+      for (const part of parts) {
+        const event = part.trim();
+        if (!event) continue;
+
+        const dataLines = event
+          .split("\n")
+          .filter((line) => line.startsWith("data:"))
+          .map((line) => line.slice(5).trimStart());
+
+        if (dataLines.length === 0) continue;
+
+        const payload = JSON.parse(dataLines.join("\n"));
+
+        if (payload.type === "token") {
+          dispatch({ type: "message", payload });
+        }
+
+        if (payload.type === "done") {
+          dispatch({ type: "answer", payload });
+        }
+
+        if (payload.type === "error") {
+          dispatch({ type: "error-answer", payload });
+        }
       }
     }
   } catch (err) {
