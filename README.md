@@ -55,4 +55,6 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 - Dashboard complete view with dymanic content from data.json
 - e2e testing with playwright
+- try some evals for ai answer testing
 - bundle analyzer set up
+- feed back interactions to evaluate answers
