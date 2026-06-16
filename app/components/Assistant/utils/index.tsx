@@ -46,7 +46,9 @@ export const getAssistantEvent = async ({
       const finalMessage = responseEventStream.parse(chunk);
 
       if (finalMessage.type === "token") {
-        dispatch({ type: "message", payload: finalMessage });
+        setTimeout(() => {
+          dispatch({ type: "message", payload: finalMessage });
+        }, 0);
       }
 
       if (finalMessage.type === "done") {
