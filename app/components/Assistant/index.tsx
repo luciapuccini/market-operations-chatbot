@@ -28,7 +28,7 @@ export function Assistant(): JSX.Element {
   );
 
   const handleCancel = useCallback(async () => {
-    dispatch({ type: "abort", payload: { message: "suer aabortede", type: "error" } });
+    dispatch({ type: "abort", payload: { message: "user aborts", type: "error" } });
     await abortCurrentRequest();
   }, [dispatch]);
 

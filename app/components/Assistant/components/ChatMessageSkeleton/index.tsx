@@ -7,7 +7,7 @@ type ChatMessageSkletonProps = ComponentProps<"li">;
 
 export default function ChatMessageSkleton({ children }: ChatMessageSkletonProps): JSX.Element {
   return (
-    <li className="flex gap-4 py-8">
+    <li data-testid="chat-message-skeleton" className="flex gap-4 py-8">
       <div className="shrink-0 self-end">
         <div className="flex size-8 items-center justify-center rounded-full bg-[var(--secondary)]">
           <Logo className="size-4" />

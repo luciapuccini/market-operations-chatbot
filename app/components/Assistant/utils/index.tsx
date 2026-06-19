@@ -42,12 +42,10 @@ export const getAssistantEvent = async ({
 
     while (true) {
       const { value, done } = await reader.read();
-
       if (done) {
         buffer += decoder.decode();
         break;
       }
-
       buffer += decoder.decode(value, { stream: true });
 
       const parts = buffer.split("\n\n");
