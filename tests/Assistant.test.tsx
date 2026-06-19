@@ -1,13 +1,30 @@
-import { expect, test, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { expect, test, vi, afterEach } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
 
 import Page from "@/app/page";
-
 import ChatMessages from "@/app/components/Assistant/components/ChatMessages";
+import { abortCurrentRequest, getAssistantEvent } from "@/app/components/Assistant/utils";
+import type { AssistantAction } from "@/app/hooks/useEventMessages";
 
 vi.mock("@/app/api/chat/route", () => ({
   POST: vi.fn(),
 }));
+
+vi.mock("@/app/components/Assistant/utils", () => ({
+  getAssistantEvent: vi.fn(),
+  abortCurrentRequest: vi.fn(),
+}));
+
+function mockGetAssistantEvent(...actions: AssistantAction[]) {
+  vi.mocked(getAssistantEvent).mockImplementation(async ({ dispatch }) => {
+    actions.forEach(dispatch);
+  });
+}
+
+afterEach(() => {
+  vi.mocked(getAssistantEvent).mockReset();
+  vi.mocked(abortCurrentRequest).mockReset();
+});
 
 global.MutationObserver = class {
   constructor() {}
@@ -21,15 +38,73 @@ test("Page renders", () => {
   expect(screen.getByRole("heading", { level: 1, name: "Market Operations Assistant" })).toBeDefined();
 });
 
-test("ChatMessages shows stream", () => {
+// Testing App state response to "external" API
+test("On API token stream message, the assistant handles accumulating streams of text", async () => {
   // given
-  render(<ChatMessages messages={[]} currentMessage="streaming..." />);
-  //when
-  const message = screen.getByText("streaming...");
-  //then
-  expect(message).toBeDefined();
+  mockGetAssistantEvent({ type: "message", payload: { type: "token", value: "stream token" } });
+  render(<Page />);
+
+  // when
+  const textarea = screen.getByTestId("userInput");
+  fireEvent.change(textarea, { target: { value: "what is happening?" } });
+  fireEvent.submit(textarea.closest("form")!);
+
+  // then —ChatMessageSkeleton implies streaming
+  expect(await screen.findByTestId("chat-message-skeleton")).toBeDefined();
+  expect(screen.queryByTestId("chat-message")).toBeNull();
 });
 
+test("On API done event, the assistant commits the streamed text as an answer", async () => {
+  // given
+  mockGetAssistantEvent(
+    { type: "message", payload: { type: "token", value: "final answer" } },
+    { type: "answer", payload: { type: "done", kind: "normal", citations: [], confidence: "high" } },
+  );
+  render(<Page />);
+
+  // when
+  const textarea = screen.getByTestId("userInput");
+  fireEvent.change(textarea, { target: { value: "what is happening?" } });
+  fireEvent.submit(textarea.closest("form")!);
+
+  // then — action.type "answer" was dispatched: currentMessage moved into messages and cleared
+  expect(await screen.findByText("final answer")).toBeDefined();
+});
+
+test("On API error event, the assistant renders the error message", async () => {
+  // given
+  mockGetAssistantEvent({ type: "error-answer", payload: { type: "error", message: "Something went wrong" } });
+  render(<Page />);
+
+  // when
+  const textarea = screen.getByTestId("userInput");
+  fireEvent.change(textarea, { target: { value: "force an error" } });
+  fireEvent.submit(textarea.closest("form")!);
+
+  // then
+  const errorMessage = await screen.findByText("Something went wrong");
+  expect(errorMessage.closest("div")?.className).toContain("destructive");
+  // error does NOT trigger abort
+  expect(abortCurrentRequest).not.toHaveBeenCalled();
+});
+
+test("On User cancel request, the assitant shows abort message", async () => {
+  // given
+  render(<Page />);
+  // when
+  const textarea = screen.getByTestId("userInput");
+  fireEvent.change(textarea, { target: { value: "normal user input" } });
+  fireEvent.submit(textarea.closest("form")!);
+
+  const cancelBtn = screen.getByRole("button", { name: "cancel" });
+  fireEvent.click(cancelBtn);
+  //then
+  const abortMessage = await screen.findByText("User Aborted Request...");
+  expect(abortMessage.closest("div")?.className).toContain("destructive");
+  expect(abortCurrentRequest).toHaveBeenCalled();
+});
+
+// Testing different UI given different data variations
 test("ChatMessages shows list of messages", () => {
   // given
   render(

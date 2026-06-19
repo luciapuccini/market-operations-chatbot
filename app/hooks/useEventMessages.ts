@@ -23,7 +23,7 @@ const initialState = {
   isStreaming: false,
 };
 
-const reducerFn = (state: AssistantState, action: AssistantAction): AssistantState => {
+export const reducerFn = (state: AssistantState, action: AssistantAction): AssistantState => {
   if (action.type === "answer") {
     const newAnswer = [
       "answer",
