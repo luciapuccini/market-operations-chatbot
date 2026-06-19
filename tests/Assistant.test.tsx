@@ -41,15 +41,15 @@ test("Page renders", () => {
 // Testing App state response to "external" API
 test("On API token stream message, the assistant handles accumulating streams of text", async () => {
   // given
-  mockGetAssistantEvent({ type: "message", payload: { type: "token", value: "stream token" } });
+  mockGetAssistantEvent({ type: "message", payload: { type: "token", value: "apac region shows ..." } });
   render(<Page />);
 
   // when
   const textarea = screen.getByTestId("userInput");
-  fireEvent.change(textarea, { target: { value: "what is happening?" } });
+  fireEvent.change(textarea, { target: { value: "how is apac doing?" } });
   fireEvent.submit(textarea.closest("form")!);
 
-  // then —ChatMessageSkeleton implies streaming
+  // then —> ChatMessageSkeleton implies streaming
   expect(await screen.findByTestId("chat-message-skeleton")).toBeDefined();
   expect(screen.queryByTestId("chat-message")).toBeNull();
 });
@@ -64,10 +64,10 @@ test("On API done event, the assistant commits the streamed text as an answer", 
 
   // when
   const textarea = screen.getByTestId("userInput");
-  fireEvent.change(textarea, { target: { value: "what is happening?" } });
+  fireEvent.change(textarea, { target: { value: "is germany at risk?" } });
   fireEvent.submit(textarea.closest("form")!);
 
-  // then — action.type "answer" was dispatched: currentMessage moved into messages and cleared
+  // then
   expect(await screen.findByText("final answer")).toBeDefined();
 });
 
